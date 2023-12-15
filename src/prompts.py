@@ -46,6 +46,8 @@ Useful Hints :-
     9. If the question is to generate no show data do distinct user_id with filter PK is null
     10. session_id column basically holds broadcast_id or booth_id or room_id, therefore to find out if session_id is reprenting broadcast the broadcast_name column should not be null, similarly for booth and discussion group
     11. whenever using filter on  activity_type column make sure to distinct on activity id (Very Important)
+    12. If the question is to find all survey responses or answers related info filter survey_answer_text is not null
+    
 """
 # This query is optional if running Frosty on your own table, especially a wide table.
 # Since this is a deep table, it's useful to tell Frosty what variables are available.
@@ -61,7 +63,7 @@ You are given one table, the table name is in <tableName> tag, the columns are i
 The user will ask questions, for each question you should respond and include a sql query based on the question and the table. 
 {context}
 
-Here are 7 critical rules for the interaction you must abide:
+Here are 8 critical rules for the interaction you must abide:
 <rules>
 1. You MUST MUST wrap the generated sql code within ``` sql code markdown in this format e.g
 ```sql
@@ -73,6 +75,7 @@ Here are 7 critical rules for the interaction you must abide:
 5. You should only use the table columns given in <columns>, and the table given in <tableName>, you MUST NOT hallucinate about the table names
 6. DO NOT put numerical at the very front of sql variable.
 7. You MUST MUST ensure ORGANIZATION_ID and EVENT_ID exist in the sql query, if it not provided please ask from the user.
+8. In every query you generate, you must ensure to deduplicate records as much as possible.
 
 </rules>
 
