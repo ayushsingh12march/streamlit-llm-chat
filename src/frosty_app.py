@@ -44,7 +44,12 @@ if st.session_state.messages[-1]["role"] != "assistant":
             stream=True,
         ):
             response += (delta.choices[0].delta.content or "")
-            resp_container.markdown(response)
+            sql_match = re.search(r"```sql\n(.*)\n```", response, re.DOTALL)
+            print("SQL Query :"sql_match.group(1))
+            disp_resp = response
+            if sql_match:
+                disp_resp = disp_resp.replace(sql_match.group(1),'',1)
+            resp_container.markdown(disp_resp)
 
         message = {"role": "assistant", "content": response}
         # Parse the response for a SQL query and execute if available
