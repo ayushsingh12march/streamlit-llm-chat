@@ -6,9 +6,46 @@ from streamlit_gsheets import GSheetsConnection
 SCHEMA_PATH = st.secrets.get("SCHEMA_PATH", "GOLDCAST.ANALYTICS")
 QUALIFIED_TABLE_NAME = f"{SCHEMA_PATH}.ACTIVITY_DENORMALIZED"
 TABLE_DESCRIPTION = """
-This table has various columns like user ids, event ids, broadcast ids, booth ids, room ids.
-This table has data of each user and his activities in a particualr event, broadcast, booth and room.
-There are various activity types like Timespent, cta clicks, etc
+This table has information of users,their activities in events or broadcast or booth or session, organizations, surveys,
+Activity_type column tells about activities performed by the user.
+There are various activity_types performed by users, listing below :-
+    * "ENGAGEMENT_SCORE" represents score of user_id or user in particular event_id or event,
+    * ATTENDED represents user_id or user attended the live event and his heartbeat is recorded,
+    * ATTENDED_ONDEMAND represents user_id or user attended the ondemand event_id or event and his heartbeat is recorded,
+    * POLL_RESPONSE represents user_id or user responded to a poll in the broadcast in an event
+    * QNA represents user_id or user asked question in the broadcast in an event,
+    * ATTENDED_BOOTH_ONDEMAND represents user_id or user attended the booth of an event ondemand ,
+    * EVENT_CTA_CLICKS  represents user_id or user clicked event cta,
+    * TIME_SPENT_IN_EVENT represents user_id or user spent time in a  live event and his heartbeat is recorded,
+    * TIME_SPENT_IN_BROADCAST_ONDEMAND represents user_id or user spent time in an ondemand broadcast in an event and his heartbeat is recorded,
+    * ATTENDED_BROADCAST_ONDEMAND  represents user_id or user attended the broadcast of an event ondemand ,
+    * TIME_SPENT_IN_BOOTH  represents user_id or user spent time in a  live booth in an event and his heartbeat is recorded,
+    * TIME_SPENT_IN_DISCUSSION_GROUP represents user_id or user spent time in a  live disussion groop or room in an event and his heartbeat is recorded,
+    * TIME_SPENT_IN_DISCUSSION_GROUP_ONDEMAND represents user_id or user spent time in an ondemand disussion groop or room in an event and his heartbeat is recorded,
+    * ENGAGEMENT_SCORE_REAL_TIME represents score or leaderboard of user_id or user in particular  event_id or event which is still live,
+    * null represents users who registered but did not perform any activity in the event
+    * CHATS represents chat messages of a particular user
+    * RESOURCE_DOWNLOAD represents resource click by a particular user
+    * ATTENDED_DISCUSSION_GROUP represents user_id or user attended the discussiongroup or room of an event ondemand ,
+    * TIME_SPENT_IN_BOOTH_ONDEMAND represents user_id or user spent time in an ondemand booth in an event and his heartbeat is recorded,
+    * TIME_SPENT_IN_BROADCAST represents user_id or user spent time in a live broadcast in an event and his heartbeat is recorded,
+    * BOOTH_CTA_CLICKS represents user_id or user clicked booth cta,
+    * TIME_SPENT_IN_EVENT_ONDEMAND represents user_id or user spent time in an ondemand event and his heartbeat is recorded,
+    * ATTENDED_BOOTH represents user_id or user attended the booth of an event in live mode ,
+    * ATTENDED_BROADCAST represents user_id or user attended the broadcast of an event when event was live ,
+    * ATTENDED_DISCUSSION_GROUP_ONDEMAND represents user_id or user attended the discussion group or room of an event ondemand ,
+Useful Hints :-
+    1. If the question is to find who all attended the event use filter event_attended_time column is not null (Very Important)
+    2. If the question is to find who all attended the event on demand  use filter event_on_demand_attended_time column is not null
+    3. If the question is to find who all attended the broadcast use filer activity_type = 'ATTENDED_BROADCAST'
+    4. If the question is to find who all attended the broadcast ondemand use filer activity_type = 'ATTENDED_BROADCAST_ONDEMAND'
+    5. If the question is to find who all attended the booth ondemand use filer activity_type = 'ATTENDED_BOOTH_ONDEMAND'
+    6. If the question is to generate a leaderbord for a running event use filter activity_type = 'ENGAGEMENT_SCORE_REAL_TIME'
+    7. If the question is to generate a leaderbord for an ended event use filter activity_type = 'ENGAGEMENT_SCORE'
+    8. If the question is to generate chats for a user use filter activity_type = 'CHATS'
+    9. If the question is to generate no show data do distinct user_id with filter PK is null
+    10. session_id column basically holds broadcast_id or booth_id or room_id, therefore to find out if session_id is reprenting broadcast the broadcast_name column should not be null, similarly for booth and discussion group
+    11. whenever using filter on  activity_type column make sure to distinct on activity id (Very Important)
 """
 # This query is optional if running Frosty on your own table, especially a wide table.
 # Since this is a deep table, it's useful to tell Frosty what variables are available.
@@ -22,7 +59,6 @@ Your goal is to give correct, executable sql query to users.
 You will be replying to users who will be confused if you don't respond in the character of Frosty.
 You are given one table, the table name is in <tableName> tag, the columns are in <columns> tag.
 The user will ask questions, for each question you should respond and include a sql query based on the question and the table. 
-
 {context}
 
 Here are 7 critical rules for the interaction you must abide:
@@ -37,6 +73,7 @@ Here are 7 critical rules for the interaction you must abide:
 5. You should only use the table columns given in <columns>, and the table given in <tableName>, you MUST NOT hallucinate about the table names
 6. DO NOT put numerical at the very front of sql variable.
 7. You MUST MUST ensure ORGANIZATION_ID and EVENT_ID exist in the sql query, if it not provided please ask from the user.
+
 </rules>
 
 Don't forget to use "ilike %keyword%" for fuzzy match queries (especially for variable_name column)
