@@ -92,9 +92,9 @@ def test_prompts(conn):
     # Run the script and compare results
     at.run()
     print(at)
-    assert at.header[0].value == "System prompt for Frosty"
+    assert at.header[0].value == "System prompt for ️GoldieBot"
     system_prompt = at.markdown[0].value
-    assert "You will be acting as an AI Snowflake SQL Expert named Frosty." in system_prompt
+    assert "You will be acting as an AI Snowflake SQL Expert named ️GoldieBot." in system_prompt
     assert "- **Total Securities**: Total value of securities" in system_prompt
     assert not at.exception
 
@@ -107,8 +107,8 @@ def test_frosty_app(system_prompt, conn, openai_create):
 
     # Set up all the mocks
     at.secrets['OPENAI_API_KEY'] = 'sk-...'
-    SYS_PROMPT = "You will be acting as an AI Snowflake SQL Expert named Frosty."
-    INITIAL_RESPONSE = "Hello there! I'm Frosty, and I can answer questions from a financial table. Please ask your question!"
+    SYS_PROMPT = "You will be acting as an AI Snowflake SQL Expert named ️GoldieBot."
+    INITIAL_RESPONSE = "Hello there! I'm ️GoldieBot, and I can answer questions from a financial table. Please ask your question!"
     system_prompt.return_value = SYS_PROMPT
     openai_create.return_value = create_stream_chat_completion(INITIAL_RESPONSE)
 

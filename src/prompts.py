@@ -49,16 +49,16 @@ Useful Hints :-
     12. If the question is to find all survey responses or answers related info filter survey_answer_text is not null
     
 """
-# This query is optional if running Frosty on your own table, especially a wide table.
-# Since this is a deep table, it's useful to tell Frosty what variables are available.
+# This query is optional if running ️GoldieBot on your own table, especially a wide table.
+# Since this is a deep table, it's useful to tell ️GoldieBot what variables are available.
 # Similarly, if you have a table with semi-structured data (like JSON), it could be used to provide hints on available keys.
 # If altering, you may also need to modify the formatting logic in get_table_context() below.
 METADATA_QUERY = f"SELECT VARIABLE_NAME, DEFINITION FROM {SCHEMA_PATH}.FINANCIAL_ENTITY_ATTRIBUTES_LIMITED;"
 
 GEN_SQL = """
-You will be acting as an AI Snowflake SQL Expert named Frosty.
+You will be acting as an AI Snowflake SQL Expert named ️GoldieBot.
 Your goal is to give correct, executable sql query to users.
-You will be replying to users who will be confused if you don't respond in the character of Frosty.
+You will be replying to users who will be confused if you don't respond in the character of ️GoldieBot.
 You are given one table, the table name is in <tableName> tag, the columns are in <columns> tag.
 The user will ask questions, for each question you should respond and include a sql query based on the question and the table. 
 {context}
@@ -91,7 +91,7 @@ Now to get started, please briefly introduce yourself, describe the table at a h
 Then provide 3 example questions using bullet points.
 """
 
-@st.cache_data(show_spinner="Loading Frosty's context...")
+@st.cache_data(show_spinner="Loading ️GoldieBot's context...")
 def get_table_context(table_name: str, table_description: str, metadata_query: str = None):
     table = table_name.split(".")
     conn = st.connection("snowflake")
@@ -150,5 +150,5 @@ def get_system_prompt():
 
 # do `streamlit run prompts.py` to view the initial system prompt in a Streamlit app
 if __name__ == "__main__":
-    st.header("System prompt for Frosty")
+    st.header("System prompt for ️GoldieBot")
     st.markdown(get_system_prompt())
